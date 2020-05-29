@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>IAvatar</title>
 </head>
 <body>
 
@@ -11,7 +11,6 @@
      img-default="avatar.jpeg"
      url-action="ajax.php">
 </div>
-<textarea id="textarea" style="margin: 2px; height: 144px; width: 206px;"></textarea>
 
 <script>
   function IAvatarClass() {
@@ -83,12 +82,6 @@
       let request = new XMLHttpRequest();
       let formData = new FormData();
       formData.append(this.iAvatarInputFile.name, this.iAvatarInputFile.files[0]);
-      request.onreadystatechange = function() {
-        if (request.readyState === 4) {
-          textarea.value = request.response;
-          console.log(request.response);
-        }
-      };
       request.open('POST', this.actionURL);
       request.send(formData);
     }
