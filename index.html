@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div id="iavatar"
+     img-default="avatar.jpeg"
+     url-action="ajax.php">
+</div>
+
+<script>
+  function IAvatarClass() {
+    this.originalURL = null;
+
+    this.iAvatarForm = document.createElement('form');
+    this.iAvatarContainer = document.createElement('div');
+    this.iAvatarUploader = document.createElement('div');
+    this.iAvatarInputFile = document.createElement('input');
+
+    this.iAvatarForm.method = 'post';
+    this.iAvatarForm.enctype = 'multipart/form-data';
+
+    this.iAvatarImage = new Image();
+    this.iAvatarImage.className = 'iavatar__image';
+    this.iAvatarImage.src = '#';
+
+    this.iAvatarContainer.className = 'iavatar';
+    this.iAvatarUploader.className = 'iavatar__uploader';
+    this.iAvatarInputFile.className = 'iavatar__input';
+    this.iAvatarInputFile.type = 'file';
+    this.iAvatarInputFile.name = 'PERSONAL_PHOTO';
+
+    this.iAvatarUploader.onclick = this.openUploadForm.bind(this);
+    this.iAvatarInputFile.onchange = this.uploadImage.bind(this);
+
+    this.iAvatarForm.append(this.iAvatarContainer);
+    this.iAvatarContainer.append(this.iAvatarUploader);
+    this.iAvatarUploader.append(this.iAvatarInputFile);
+    this.iAvatarUploader.append(this.iAvatarImage);
+  }
+
+  IAvatarClass.prototype.createContainer = function() {
+    let container = document.getElementById('iavatar');
+    container.append(this.iAvatarForm);
+
+    if (container.hasAttribute('img-default')) {
+      this.originalURL = container.getAttribute('img-default');
+      this.uploadImage();
+    }
+
+    this.actionURL = container.getAttribute('url-action') || location.href;
+  };
+
+  IAvatarClass.prototype.openUploadForm = function() {
+    this.iAvatarInputFile.click();
+  };
+
+  IAvatarClass.prototype.uploadImage = function() {
+    this.iAvatarImage.src = !!this.iAvatarInputFile.files[0] ?
+        URL.createObjectURL(this.iAvatarInputFile.files[0]) :
+        this.originalURL;
+    this.iAvatarImage.onload = this.imageIsLoaded.bind(this);
+  };
+
+  IAvatarClass.prototype.imageIsLoaded = function() {
+    this.iAvatarUploader.classList.add('iavatar__uploader_uploaded');
+
+    if (this.iAvatarInputFile.files[0]) {
+      let request = new XMLHttpRequest();
+      let formData = new FormData();
+      formData.append(this.iAvatarInputFile.name, this.iAvatarInputFile.files[0]);
+      request.open('POST', this.actionURL);
+      request.send(formData);
+    }
+  };
+
+  window.onload = function() {
+    window.iAvatarClass = new IAvatarClass();
+    iAvatarClass.createContainer();
+  };
+</script>
+
+<style>
+    .iavatar {
+        position: relative;
+        display: flex;
+        width: 104px;
+        height: 104px;
+        text-align: center;
+        background-color: #fafafa;
+        margin-right: 8px;
+        margin-bottom: 8px;
+    }
+
+    .iavatar__uploader {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: border-color .3s ease;
+        border: 1px dashed #d9d9d9;
+        width: 100%;
+        height: auto;
+        padding: 8px;
+    }
+
+    .iavatar__uploader:not(.iavatar__uploader_uploaded):after {
+        content: 'Загрузить фото';
+        color: #666;
+        font-size: 0.9rem;
+        line-height: 1.2rem;
+    }
+
+    .iavatar__uploader:hover {
+        border-color: #1890ff;
+    }
+
+    .iavatar__image,
+    .iavatar__input {
+        display: none;
+    }
+
+    .iavatar__uploader_uploaded .iavatar__image {
+        display: block;
+    }
+
+    .iavatar__image {
+        max-width: 100%;
+        height: auto;
+    }
+</style>
+
+</body>
+</html>
