@@ -13,8 +13,8 @@
 
 I set limit for size of image not more 2mb
 
-Demo: https://shturmavik.github.io/iavatar/
-Codepen: https://codepen.io/Shturmavik/pen/ExVBRQE
+- Demo: https://shturmavik.github.io/iavatar/
+- Codepen: https://codepen.io/Shturmavik/pen/ExVBRQE
 
 License
 ----
